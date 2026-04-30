@@ -1,0 +1,210 @@
+
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+     <title>Date Proposal</title>
+     <style>
+         body {
+             background: linear-gradient(135deg, #ffd1dc, #ffefba);
+             font-family: "Times New Roman", Tahoma, Geneva, Verdana, sans-serif;
+             display: flex;
+             justify-content: center;
+             align-items: center;
+             min-height: 100vh;
+             margin: 0;
+             text-align: center;
+         }
+ 
+         .card {
+             background: white;
+             border-radius: 24px;
+             box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+             padding: 36px;
+             max-width: 420px;
+             width: 100%;
+         }
+ 
+         h1 {
+             color: #333;
+             font-size: 2rem;
+             margin-bottom: 16px;
+         }
+ 
+         .message {
+             margin-top: 18px;
+             color: #555;
+             font-size: 1rem;
+             line-height: 1.5;
+         }
+ 
+         .image-container {
+             width: 100%;
+             border-radius: 12px;
+             margin-top: 16px;
+             overflow: hidden;
+         }
+ 
+         .image-container img {
+             width: 100%;
+             height: auto;
+             display: block;
+         }
+ 
+         .button-row {
+             display: flex;
+             justify-content: center;
+             gap: 16px;
+             position: relative;
+             margin-top: 24px;
+             flex-wrap: wrap;
+         }
+ 
+         .option-button {
+             background: #ff6b81;
+             border: none;
+             border-radius: 999px;
+             color: white;
+             cursor: pointer;
+             font-size: 1rem;
+             padding: 12px 24px;
+             transition: transform 0.2s ease, background 1s ease;
+             position: relative;
+             white-space: nowrap;
+         }
+ 
+         .option-button:hover {
+             transform: scale(1.05);
+             background: #ff5070;
+         }
+ 
+         .no-button {
+             background: #444;
+         }
+ 
+         .no-button:hover {
+             background: #333;
+         }
+ 
+         .response-message {
+             margin-top: 24px;
+             font-size: 1.2rem;
+             color: #ff6b81;
+             font-weight: bold;
+         }
+
+        .plane-overlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.95);
+            z-index: 999;
+            pointer-events: none;
+        }
+
+        .plane {
+            font-size: 4rem;
+            animation: fly-plane 2s ease forwards;
+        }
+
+        @keyframes fly-plane {
+            0% {
+                transform: translate(0%, 0) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                transform: translate(100%, 0) rotate(0deg);
+                opacity: 1;
+            }
+            60% {
+                transform: translate(150%, -120%) rotate(20deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(250%, -200%) rotate(40deg);
+                opacity: 0;
+            }
+        }
+     </style>
+ </head>
+ <body>
+     <div class="card">
+         <h1>Can I Ask You Something?</h1>
+         <div class="message" id="message">
+             <div class="image-container">
+                 <img src="https://www.geekextreme.com/wp-content/uploads/2023/08/Ronald-McDonald.jpg" alt="McDonald's" />
+             </div>
+             <p>Surprise ito ni MCDO para sa Princess ng kitchen at ang MHiee ko</p>
+         </div>
+ 
+         <div class="button-row" id="buttonRow">
+             <button class="option-button" id="askButton">SIGE WALA NAMAN AKO CHOICE</button>
+         </div>
+ 
+         <div id="responseMessage" class="response-message"></div>
+     </div>
+ 
+     <script>
+         const message = document.getElementById("message");
+         const buttonRow = document.getElementById("buttonRow");
+         const responseMessage = document.getElementById("responseMessage");
+ 
+         function createButton(id, text, extraClass = "") {
+             const button = document.createElement("button");
+             button.className = `option-button ${extraClass}`.trim();
+             button.id = id;
+             button.textContent = text;
+             return button;
+         }
+ 
+         function moveAway(button) {
+             const maxShift = 200;
+             const x = Math.floor(Math.random() * (maxShift * 2 + 1)) - maxShift;
+             const y = Math.floor(Math.random() * 40) - 20;
+             button.style.transform = `translate(${x}px, ${y}px)`;
+         }
+ 
+         const askButton = document.getElementById("askButton");
+         askButton.addEventListener("click", () => {
+             message.innerHTML = `
+                 <div class="image-container">
+                     <img src="https://i.pinimg.com/474x/dc/67/2a/dc672a4e57378d6719c5d8571f2c9001.jpg" alt="DATE" />
+                 </div>
+                 <p><strong>Are you willing to spend a day with me on date? 🌅</strong></p>
+                 <p><strong>tanong ng future mo at the one and only mo </strong></p>
+             `;
+ 
+             buttonRow.innerHTML = "";
+             responseMessage.textContent = "";
+ 
+             const yesButton = createButton("yesButton", "Yes 💖");
+             const noButton = createButton("noButton", "No", "no-button");
+ 
+             yesButton.addEventListener("click", () => {
+                 message.innerHTML = `
+                     <div class="image-container">
+                         <img src="TRY.jpg" alt="Happy na si Dhieee" />
+                     </div>
+                     <p><strong>Happy na si Dhieee!!!</strong></p>
+                     <p><strong>Set nalang talaga ng araw HAHAHAHA! 💕</strong></p>
+                 `;
+                 responseMessage.textContent = "I can't wait to spend time with you! Theres more to come! 😊";
+                 buttonRow.innerHTML = "";
+             });
+ 
+             noButton.addEventListener("mouseenter", () => moveAway(noButton));
+             noButton.addEventListener("focus", () => moveAway(noButton));
+             noButton.addEventListener("click", (event) => {
+                 event.preventDefault();
+                 moveAway(noButton);
+             });
+ 
+             buttonRow.appendChild(yesButton);
+             buttonRow.appendChild(noButton);
+         });
+     </script>
+ </body>
+ </html>
