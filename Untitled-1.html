@@ -3,7 +3,7 @@
  <head>
      <meta charset="UTF-8" />
      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-     <title>Date Proposal</title>
+     <title> Date Proposal </title>
      <style>
          body {
              background: linear-gradient(135deg, #ffd1dc, #ffefba);
@@ -131,16 +131,16 @@
  </head>
  <body>
      <div class="card">
-         <h1>Can I Ask You Something?</h1>
+         <h1>May suprise sa likod ng mountain</h1>
          <div class="message" id="message">
              <div class="image-container">
-                 <img src="https://tse4.mm.bing.net/th/id/OIP.cIoPC68knT52pBzH7rutrgHaF_?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="DOCTOR" />
+                 <img src="https://thumbnails.cbsig.net/CBS_Production_Entertainment_VMS/2021/10/30/1969403459670/PPNIK_DORATHEEXPLORER_403_970029_1920x1080.jpg" alt="DOCTOR" />
              </div>
-             <p>Surprise ito ni Doctor sa napaka ganda nurse </p>
+             <p> Surprise ito sa napakaganda explorer </p>
          </div>
  
          <div class="button-row" id="buttonRow">
-             <button class="option-button" id="askButton">SIGE WALA NAMAN AKO CHOICE</button>
+             <button class="option-button" id="askButton">SIGE ANO YONG SUPRISE?</button>
          </div>
  
          <div id="responseMessage" class="response-message"></div>
@@ -170,17 +170,17 @@
          askButton.addEventListener("click", () => {
              message.innerHTML = `
                  <div class="image-container">
-                     <img src="https://i.pinimg.com/474x/dc/67/2a/dc672a4e57378d6719c5d8571f2c9001.jpg" alt="DATE" />
+                     <img src="https://chatgpt.com/s/m_6a7306b764088191986b9451d64ee48b" alt="DATE" />
                  </div>
-                 <p><strong>Are you willing to spend a day with me on a date? 🌅</strong></p>
-                 <p><strong>tanong ng future mo at the one and only mo </strong></p>
+                 <p><strong> Are you willing to spend a day with me on a date? 🌅</strong></p>
+                 <p><strong> Tanong ng partner in crime mo </strong></p>
              `;
  
              buttonRow.innerHTML = "";
              responseMessage.textContent = "";
  
-             const yesButton = createButton("yesButton", "Yes 💖");
-             const noButton = createButton("noButton", "No", "no-button");
+             const yesButton = createButton("yesButton", "Yes 🧡");
+             const noButton = createButton("noButton", "No (di pwede huhuhu)", "no-button");
  
              yesButton.addEventListener("click", () => {
                  message.innerHTML = `
@@ -190,7 +190,7 @@
                      <p><strong>Happy na ako HAHAHAHA!!!</strong></p>
                      <p><strong>Set nalang tayo ng araw HAHAHAHA! 💕</strong></p>
                  `;
-                 responseMessage.textContent = "I can't wait to spend time with you! Theres more to come! 😊";
+                 responseMessage.textContent = "I can't wait to spend time with you😊!!1";
                  buttonRow.innerHTML = "";
              });
  
