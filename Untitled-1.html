@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title> Date Proposal </title>
+    <title>Date Proposal</title>
     <style>
         * {
             margin: 0;
@@ -11,18 +11,20 @@
             box-sizing: border-box;
         }
 
-        body {
+        html, body {
+            width: 100%;
+            height: 100%;
             background: linear-gradient(135deg, #ffd1dc, #ffefba);
+        }
+
+        body {
             font-family: "Times New Roman", Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
             text-align: center;
             position: relative;
             overflow: hidden;
-            width: 100%;
-            height: 100%;
         }
 
         .card {
@@ -31,7 +33,7 @@
             box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
             padding: 36px;
             max-width: 420px;
-            width: 100%;
+            width: 90%;
             position: relative;
             z-index: 10;
             animation: fadeInCard 0.6s ease-out;
@@ -136,8 +138,8 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             background: linear-gradient(135deg, #ffd1dc, #ffefba);
             z-index: 1000;
             pointer-events: none;
@@ -150,7 +152,7 @@
                 opacity: 1;
             }
             100% {
-                transform: translateX(100vw);
+                transform: translateX(100%);
                 opacity: 0;
             }
         }
@@ -160,8 +162,8 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
             z-index: 999;
             overflow: hidden;
@@ -169,16 +171,14 @@
 
         .plane {
             position: fixed;
-            left: 0;
             font-size: 3.2rem;
-            transform: translate3d(0, 0, 0);
             animation: fly-plane 1400ms cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
             will-change: transform, opacity;
         }
 
         @keyframes fly-plane {
             0% {
-                left: -5vw;
+                left: -10%;
                 opacity: 0;
                 transform: rotate(-8deg) scale(1);
             }
@@ -186,12 +186,12 @@
                 opacity: 1;
             }
             60% {
-                left: 45vw;
+                left: 40%;
                 opacity: 1;
                 transform: rotate(6deg) scale(1.05);
             }
             100% {
-                left: 110vw;
+                left: 120%;
                 opacity: 0;
                 transform: rotate(20deg) scale(0.95);
             }
@@ -202,8 +202,8 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
             z-index: 500;
             overflow: visible;
@@ -254,7 +254,6 @@
         const buttonRow = document.getElementById("buttonRow");
         const responseMessage = document.getElementById("responseMessage");
 
-        // Create plane overlay
         let planeOverlay = null;
 
         function getPlaneOverlay() {
@@ -266,7 +265,6 @@
             return planeOverlay;
         }
 
-        // Create heart container
         let heartContainer = null;
 
         function getHeartContainer() {
@@ -293,7 +291,6 @@
             button.style.transform = `translate(${x}px, ${y}px)`;
         }
 
-        // Create and fly a plane on demand
         function flyPlane(options = {}) {
             const emoji = options.emoji || '✈️';
             const overlay = getPlaneOverlay();
@@ -302,34 +299,29 @@
             plane.className = 'plane';
             plane.textContent = emoji;
 
-            // randomize vertical start to make it feel dynamic
             const topPercent = (options.top !== undefined)
                 ? options.top
                 : 50 - Math.floor(Math.random() * 30);
             plane.style.top = `${topPercent}vh`;
 
-            // optionally set a custom duration
             if (options.duration) {
                 plane.style.animationDuration = options.duration + 'ms';
             }
 
             overlay.appendChild(plane);
 
-            // Remove plane after animation completes
             const duration = options.duration || 1400;
             setTimeout(() => {
                 if (overlay.contains(plane)) plane.remove();
             }, duration + 200);
         }
 
-        // Pop hearts on screen
         function popHeart() {
             const container = getHeartContainer();
             const heart = document.createElement('div');
             heart.className = 'heart';
             heart.textContent = '❤️';
 
-            // Random horizontal position
             const randomX = Math.random() * (window.innerWidth - 60);
             const randomY = Math.random() * (window.innerHeight - 60);
             
@@ -338,13 +330,11 @@
 
             container.appendChild(heart);
 
-            // Remove heart after animation completes
             setTimeout(() => {
                 if (container.contains(heart)) heart.remove();
             }, 2100);
         }
 
-        // Page transition overlay
         function createPageTransition() {
             const transition = document.createElement('div');
             transition.className = 'page-transition';
@@ -355,7 +345,6 @@
             }, 1000);
         }
 
-        // existing behavior
         const askButton = document.getElementById("askButton");
         askButton.addEventListener("click", () => {
             flyPlane();
@@ -412,7 +401,6 @@
             }, 500);
         });
 
-        // Button click delegation
         buttonRow.addEventListener('click', (e) => {
             if (e.target && e.target.classList && e.target.classList.contains('option-button')) {
                 flyPlane({ emoji: '✈️' });
