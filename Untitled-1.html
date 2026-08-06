@@ -1,209 +1,265 @@
  <!DOCTYPE html>
- <html lang="en">
- <head>
-     <meta charset="UTF-8" />
-     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-     <title> Date Proposal </title>
-     <style>
-         body {
-             background: linear-gradient(135deg, #ffd1dc, #ffefba);
-             font-family: "Times New Roman", Tahoma, Geneva, Verdana, sans-serif;
-             display: flex;
-             justify-content: center;
-             align-items: center;
-             min-height: 100vh;
-             margin: 0;
-             text-align: center;
-         }
- 
-         .card {
-             background: white;
-             border-radius: 24px;
-             box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
-             padding: 36px;
-             max-width: 420px;
-             width: 100%;
-         }
- 
-         h1 {
-             color: #333;
-             font-size: 2rem;
-             margin-bottom: 16px;
-         }
- 
-         .message {
-             margin-top: 18px;
-             color: #555;
-             font-size: 1rem;
-             line-height: 1.5;
-         }
- 
-         .image-container {
-             width: 100%;
-             border-radius: 12px;
-             margin-top: 16px;
-             overflow: hidden;
-         }
- 
-         .image-container img {
-             width: 100%;
-             height: auto;
-             display: block;
-         }
- 
-         .button-row {
-             display: flex;
-             justify-content: center;
-             gap: 16px;
-             position: relative;
-             margin-top: 24px;
-             flex-wrap: wrap;
-         }
- 
-         .option-button {
-             background: #ff6b81;
-             border: none;
-             border-radius: 999px;
-             color: white;
-             cursor: pointer;
-             font-size: 1rem;
-             padding: 12px 24px;
-             transition: transform 0.2s ease, background 1s ease;
-             position: relative;
-             white-space: nowrap;
-         }
- 
-         .option-button:hover {
-             transform: scale(1.05);
-             background: #ff5070;
-         }
- 
-         .no-button {
-             background: #444;
-         }
- 
-         .no-button:hover {
-             background: #333;
-         }
- 
-         .response-message {
-             margin-top: 24px;
-             font-size: 1.2rem;
-             color: #ff6b81;
-             font-weight: bold;
-         }
-
-        .plane-overlay {
-            position: fixed;
-            inset: 0;
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> Date Proposal </title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #ffd1dc, #ffefba);
+            font-family: "Times New Roman", Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: rgba(255, 255, 255, 0.95);
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        .card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+            padding: 36px;
+            max-width: 420px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+
+        .message {
+            margin-top: 18px;
+            color: #555;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .image-container {
+            width: 100%;
+            border-radius: 12px;
+            margin-top: 16px;
+            overflow: hidden;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            position: relative;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .option-button {
+            background: #ff6b81;
+            border: none;
+            border-radius: 999px;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 12px 24px;
+            transition: transform 0.2s ease, background 1s ease;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .option-button:hover {
+            transform: scale(1.05);
+            background: #ff5070;
+        }
+
+        .no-button {
+            background: #444;
+        }
+
+        .no-button:hover {
+            background: #333;
+        }
+
+        .response-message {
+            margin-top: 24px;
+            font-size: 1.2rem;
+            color: #ff6b81;
+            font-weight: bold;
+        }
+
+        /* Plane overlay and plane styles */
+        .plane-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none; /* allow clicks through overlay */
             z-index: 999;
-            pointer-events: none;
+            overflow: visible;
         }
 
         .plane {
-            font-size: 4rem;
-            animation: fly-plane 2s ease forwards;
+            position: absolute;
+            left: -10%;
+            /* will be positioned vertically via JS for slight randomness */
+            font-size: 3.2rem;
+            transform: translate3d(0, 0, 0);
+            animation: fly-plane 1400ms cubic-bezier(.2,.9,.2,1) forwards;
+            will-change: transform, opacity;
         }
 
         @keyframes fly-plane {
             0% {
-                transform: translate(0%, 0) rotate(0deg);
+                transform: translate(-10vw, 0) rotate(-8deg) scale(1);
                 opacity: 0;
             }
-            20% {
-                transform: translate(100%, 0) rotate(0deg);
+            12% {
                 opacity: 1;
             }
             60% {
-                transform: translate(150%, -120%) rotate(20deg);
+                transform: translate(60vw, -18vh) rotate(6deg) scale(1.05);
                 opacity: 1;
             }
             100% {
-                transform: translate(250%, -200%) rotate(40deg);
+                transform: translate(140vw, -30vh) rotate(20deg) scale(0.95);
                 opacity: 0;
             }
         }
-     </style>
- </head>
- <body>
-     <div class="card">
-         <h1>May suprise sa likod ng mountain</h1>
-         <div class="message" id="message">
-             <div class="image-container">
-                 <img src="https://thumbnails.cbsig.net/CBS_Production_Entertainment_VMS/2021/10/30/1969403459670/PPNIK_DORATHEEXPLORER_403_970029_1920x1080.jpg" alt="DOCTOR" />
-             </div>
-             <p> Surprise ito sa napakaganda explorer </p>
-         </div>
- 
-         <div class="button-row" id="buttonRow">
-             <button class="option-button" id="askButton">SIGE ANO YONG SUPRISE?</button>
-         </div>
- 
-         <div id="responseMessage" class="response-message"></div>
-     </div>
- 
-     <script>
-         const message = document.getElementById("message");
-         const buttonRow = document.getElementById("buttonRow");
-         const responseMessage = document.getElementById("responseMessage");
- 
-         function createButton(id, text, extraClass = "") {
-             const button = document.createElement("button");
-             button.className = `option-button ${extraClass}`.trim();
-             button.id = id;
-             button.textContent = text;
-             return button;
-         }
- 
-         function moveAway(button) {
-             const maxShift = 200;
-             const x = Math.floor(Math.random() * (maxShift * 2 + 1)) - maxShift;
-             const y = Math.floor(Math.random() * 40) - 20;
-             button.style.transform = `translate(${x}px, ${y}px)`;
-         }
- 
-         const askButton = document.getElementById("askButton");
-         askButton.addEventListener("click", () => {
-             message.innerHTML = `
-                 <div class="image-container">
-                     <img src="https://i.pinimg.com/originals/be/19/d3/be19d3effe0c8745e202c47e89f5db5f.png" alt="Happy na" />
-                 </div>
-                 <p><strong> Are you willing to spend a day with me on a date? 🌅</strong></p>
-                 <p><strong> Tanong ng partner in crime mo </strong></p>
-             `;
- 
-             buttonRow.innerHTML = "";
-             responseMessage.textContent = "";
- 
-             const yesButton = createButton("yesButton", "Yes 🧡");
-             const noButton = createButton("noButton", "No (di pwede huhuhu)", "no-button");
- 
-             yesButton.addEventListener("click", () => {
-                 message.innerHTML = `
-                     <div class="image-container">
-                         <img src="TRY.jpg" alt="Happy na" />
-                     </div>
-                     <p><strong>Happy na ako HAHAHAHA!!!</strong></p>
-                     <p><strong>Set nalang tayo ng araw HAHAHAHA! 💕</strong></p>
-                 `;
-                 responseMessage.textContent = "I can't wait to spend time with you😊!!1";
-                 buttonRow.innerHTML = "";
-             });
- 
-             noButton.addEventListener("mouseenter", () => moveAway(noButton));
-             noButton.addEventListener("focus", () => moveAway(noButton));
-             noButton.addEventListener("click", (event) => {
-                 event.preventDefault();
-                 moveAway(noButton);
-             });
- 
-             buttonRow.appendChild(yesButton);
-             buttonRow.appendChild(noButton);
-         });
-     </script>
- </body>
- </html>
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>May suprise sa likod ng mountain</h1>
+        <div class="message" id="message">
+            <div class="image-container">
+                <img src="https://thumbnails.cbsig.net/CBS_Production_Entertainment_VMS/2021/10/30/1969403459670/PPNIK_DORATHEEXPLORER_403_970029_1920x1080.jpg" alt="DOCTOR" />
+            </div>
+            <p> Surprise ito sa napakaganda explorer </p>
+        </div>
+
+        <div class="button-row" id="buttonRow">
+            <button class="option-button" id="askButton">SIGE ANO YONG SUPRISE?</button>
+        </div>
+
+        <div id="responseMessage" class="response-message"></div>
+    </div>
+
+    <script>
+        const message = document.getElementById("message");
+        const buttonRow = document.getElementById("buttonRow");
+        const responseMessage = document.getElementById("responseMessage");
+
+        function createButton(id, text, extraClass = "") {
+            const button = document.createElement("button");
+            button.className = `option-button ${extraClass}`.trim();
+            button.id = id;
+            button.textContent = text;
+            return button;
+        }
+
+        function moveAway(button) {
+            const maxShift = 200;
+            const x = Math.floor(Math.random() * (maxShift * 2 + 1)) - maxShift;
+            const y = Math.floor(Math.random() * 40) - 20;
+            button.style.transform = `translate(${x}px, ${y}px)`;
+        }
+
+        // New: create and fly a plane on demand
+        function flyPlane(options = {}) {
+            // options: emoji (string), top (percentage), duration (ms)
+            const emoji = options.emoji || '✈️';
+            const overlay = document.createElement('div');
+            overlay.className = 'plane-overlay';
+
+            const plane = document.createElement('div');
+            plane.className = 'plane';
+            plane.textContent = emoji;
+
+            // randomize vertical start to make it feel dynamic
+            const topPercent = (options.top !== undefined)
+                ? options.top
+                : 50 - Math.floor(Math.random() * 30); // between ~20% and 50%
+            plane.style.top = `${topPercent}vh`;
+
+            // optionally set a custom duration by overriding the animation duration inline
+            if (options.duration) {
+                plane.style.animationDuration = options.duration + 'ms';
+            }
+
+            overlay.appendChild(plane);
+            document.body.appendChild(overlay);
+
+            // Remove overlay after animation completes (fallback with timeout)
+            plane.addEventListener('animationend', () => {
+                overlay.remove();
+            });
+            setTimeout(() => {
+                if (document.body.contains(overlay)) overlay.remove();
+            }, (options.duration || 1400) + 200);
+        }
+
+        // existing behavior
+        const askButton = document.getElementById("askButton");
+        askButton.addEventListener("click", () => {
+            // spawn a plane when the ask button is clicked
+            flyPlane();
+
+            message.innerHTML = `
+                <div class="image-container">
+                    <img src="https://i.pinimg.com/originals/be/19/d3/be19d3effe0c8745e202c47e89f5db5f.png" alt="Happy na" />
+                </div>
+                <p><strong> Are you willing to spend a day with me on a date? 🌅</strong></p>
+                <p><strong> Tanong ng partner in crime mo </strong></p>
+            `;
+
+            buttonRow.innerHTML = "";
+            responseMessage.textContent = "";
+
+            const yesButton = createButton("yesButton", "Yes 🧡");
+            const noButton = createButton("noButton", "No (di pwede huhuhu)", "no-button");
+
+            yesButton.addEventListener("click", () => {
+                // spawn a plane when yes is clicked
+                flyPlane({ emoji: '💌', top: 45, duration: 1200 });
+
+                message.innerHTML = `
+                    <div class="image-container">
+                        <img src="TRY.jpg" alt="Happy na" />
+                    </div>
+                    <p><strong>Happy na ako HAHAHAHA!!!</strong></p>
+                    <p><strong>Set nalang tayo ng araw HAHAHAHA! 💕</strong></p>
+                `;
+                responseMessage.textContent = "I can't wait to spend time with you😊!!1";
+                buttonRow.innerHTML = "";
+            });
+
+            noButton.addEventListener("mouseenter", () => {
+                moveAway(noButton);
+                // spawn a playful plane when the "no" button jumps away
+                flyPlane({ emoji: '🛩️', top: 40, duration: 1000 });
+            });
+            noButton.addEventListener("focus", () => moveAway(noButton));
+            noButton.addEventListener("click", (event) => {
+                event.preventDefault();
+                moveAway(noButton);
+                flyPlane({ emoji: '😅', top: 50, duration: 1000 });
+            });
+
+            buttonRow.appendChild(yesButton);
+            buttonRow.appendChild(noButton);
+        });
+
+        // Optional: if you want a plane on any button click inside the buttonRow (delegation)
+        buttonRow.addEventListener('click', (e) => {
+            if (e.target && e.target.classList && e.target.classList.contains('option-button')) {
+                // spawn a small plane for every explicit button click (in case some buttons are added later)
+                flyPlane({ emoji: '✈️' });
+            }
+        });
+    </script>
+</body>
+</html>
