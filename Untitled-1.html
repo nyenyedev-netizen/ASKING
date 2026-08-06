@@ -1,10 +1,16 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title> Date Proposal </title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             background: linear-gradient(135deg, #ffd1dc, #ffefba);
             font-family: "Times New Roman", Tahoma, Geneva, Verdana, sans-serif;
@@ -12,10 +18,11 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
             text-align: center;
             position: relative;
-            overflow-x: hidden;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
         }
 
         .card {
@@ -27,6 +34,18 @@
             width: 100%;
             position: relative;
             z-index: 10;
+            animation: fadeInCard 0.6s ease-out;
+        }
+
+        @keyframes fadeInCard {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         h1 {
@@ -40,6 +59,16 @@
             color: #555;
             font-size: 1rem;
             line-height: 1.5;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
 
         .image-container {
@@ -76,6 +105,7 @@
             transition: transform 0.2s ease, background 1s ease;
             position: relative;
             white-space: nowrap;
+            animation: fadeIn 0.6s ease-out;
         }
 
         .option-button:hover {
@@ -98,9 +128,34 @@
             font-weight: bold;
             position: relative;
             z-index: 10;
+            animation: fadeIn 0.6s ease-out;
         }
 
-        /* Plane overlay and plane styles - FIXED */
+        /* Page transition styles */
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #ffd1dc, #ffefba);
+            z-index: 1000;
+            pointer-events: none;
+            animation: slideOutRight 1s cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
+        }
+
+        @keyframes slideOutRight {
+            0% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100vw);
+                opacity: 0;
+            }
+        }
+
+        /* Plane overlay and plane styles */
         .plane-overlay {
             position: fixed;
             top: 0;
@@ -108,7 +163,7 @@
             width: 100vw;
             height: 100vh;
             pointer-events: none;
-            z-index: 5;
+            z-index: 999;
             overflow: hidden;
         }
 
@@ -117,7 +172,7 @@
             left: 0;
             font-size: 3.2rem;
             transform: translate3d(0, 0, 0);
-            animation: fly-plane 1400ms cubic-bezier(.2,.9,.2,1) forwards;
+            animation: fly-plane 1400ms cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
             will-change: transform, opacity;
         }
 
@@ -221,52 +276,69 @@
             }, duration + 200);
         }
 
+        // Page transition overlay
+        function createPageTransition() {
+            const transition = document.createElement('div');
+            transition.className = 'page-transition';
+            document.body.appendChild(transition);
+            
+            setTimeout(() => {
+                transition.remove();
+            }, 1000);
+        }
+
         // existing behavior
         const askButton = document.getElementById("askButton");
         askButton.addEventListener("click", () => {
             flyPlane();
+            createPageTransition();
 
-            message.innerHTML = `
-                <div class="image-container">
-                    <img src="https://i.pinimg.com/originals/be/19/d3/be19d3effe0c8745e202c47e89f5db5f.png" alt="Happy na" />
-                </div>
-                <p><strong> Are you willing to spend a day with me on a date? 🌅</strong></p>
-                <p><strong> Tanong ng partner in crime mo </strong></p>
-            `;
-
-            buttonRow.innerHTML = "";
-            responseMessage.textContent = "";
-
-            const yesButton = createButton("yesButton", "Yes 🧡");
-            const noButton = createButton("noButton", "No (di pwede huhuhu)", "no-button");
-
-            yesButton.addEventListener("click", () => {
-                flyPlane({ emoji: '💌', top: 45, duration: 1200 });
-
+            setTimeout(() => {
                 message.innerHTML = `
                     <div class="image-container">
-                        <img src="TRY.jpg" alt="Happy na" />
+                        <img src="https://i.pinimg.com/originals/be/19/d3/be19d3effe0c8745e202c47e89f5db5f.png" alt="Happy na" />
                     </div>
-                    <p><strong>Happy na ako HAHAHAHA!!!</strong></p>
-                    <p><strong>Set nalang tayo ng araw HAHAHAHA! 💕</strong></p>
+                    <p><strong> Are you willing to spend a day with me on a date? 🌅</strong></p>
+                    <p><strong> Tanong ng partner in crime mo </strong></p>
                 `;
-                responseMessage.textContent = "I can't wait to spend time with you😊!!1";
+
                 buttonRow.innerHTML = "";
-            });
+                responseMessage.textContent = "";
 
-            noButton.addEventListener("mouseenter", () => {
-                moveAway(noButton);
-                flyPlane({ emoji: '🛩️', top: 40, duration: 1000 });
-            });
-            noButton.addEventListener("focus", () => moveAway(noButton));
-            noButton.addEventListener("click", (event) => {
-                event.preventDefault();
-                moveAway(noButton);
-                flyPlane({ emoji: '😅', top: 50, duration: 1000 });
-            });
+                const yesButton = createButton("yesButton", "Yes 🧡");
+                const noButton = createButton("noButton", "No (di pwede huhuhu)", "no-button");
 
-            buttonRow.appendChild(yesButton);
-            buttonRow.appendChild(noButton);
+                yesButton.addEventListener("click", () => {
+                    flyPlane({ emoji: '💌', top: 45, duration: 1200 });
+                    createPageTransition();
+
+                    setTimeout(() => {
+                        message.innerHTML = `
+                            <div class="image-container">
+                                <img src="TRY.jpg" alt="Happy na" />
+                            </div>
+                            <p><strong>Happy na ako HAHAHAHA!!!</strong></p>
+                            <p><strong>Set nalang tayo ng araw HAHAHAHA! 💕</strong></p>
+                        `;
+                        responseMessage.textContent = "I can't wait to spend time with you😊!!1";
+                        buttonRow.innerHTML = "";
+                    }, 500);
+                });
+
+                noButton.addEventListener("mouseenter", () => {
+                    moveAway(noButton);
+                    flyPlane({ emoji: '🛩️', top: 40, duration: 1000 });
+                });
+                noButton.addEventListener("focus", () => moveAway(noButton));
+                noButton.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    moveAway(noButton);
+                    flyPlane({ emoji: '😅', top: 50, duration: 1000 });
+                });
+
+                buttonRow.appendChild(yesButton);
+                buttonRow.appendChild(noButton);
+            }, 500);
         });
 
         // Button click delegation
