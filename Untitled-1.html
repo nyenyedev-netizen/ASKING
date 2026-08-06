@@ -49,5 +49,376 @@
         }
 
         h1 {
-            color: #*
-
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+
+        .message {
+            margin-top: 18px;
+            color: #555;
+            font-size: 1rem;
+            line-height: 1.5;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .image-container {
+            width: 100%;
+            border-radius: 12px;
+            margin-top: 16px;
+            overflow: hidden;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            position: relative;
+            margin-top: 24px;
+            flex-wrap: wrap;
+            z-index: 10;
+        }
+
+        .option-button {
+            background: #ff6b81;
+            border: none;
+            border-radius: 999px;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 12px 24px;
+            transition: transform 0.2s ease, background 1s ease;
+            position: relative;
+            white-space: nowrap;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .option-button:hover {
+            transform: scale(1.05);
+            background: #ff5070;
+        }
+
+        .no-button {
+            background: #444;
+        }
+
+        .no-button:hover {
+            background: #333;
+        }
+
+        .response-message {
+            margin-top: 24px;
+            font-size: 1.2rem;
+            color: #ff6b81;
+            font-weight: bold;
+            position: relative;
+            z-index: 10;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* Page transition styles */
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #ffd1dc, #ffefba);
+            z-index: 1000;
+            pointer-events: none;
+            animation: slideOutRight 1s cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
+        }
+
+        @keyframes slideOutRight {
+            0% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100vw);
+                opacity: 0;
+            }
+        }
+
+        /* Plane overlay and plane styles */
+        .plane-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 999;
+            overflow: hidden;
+        }
+
+        .plane {
+            position: fixed;
+            left: 0;
+            font-size: 3.2rem;
+            transform: translate3d(0, 0, 0);
+            animation: fly-plane 1400ms cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
+            will-change: transform, opacity;
+        }
+
+        @keyframes fly-plane {
+            0% {
+                left: -5vw;
+                opacity: 0;
+                transform: rotate(-8deg) scale(1);
+            }
+            12% {
+                opacity: 1;
+            }
+            60% {
+                left: 45vw;
+                opacity: 1;
+                transform: rotate(6deg) scale(1.05);
+            }
+            100% {
+                left: 110vw;
+                opacity: 0;
+                transform: rotate(20deg) scale(0.95);
+            }
+        }
+
+        /* Heart pop-up styles */
+        .heart-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 500;
+            overflow: visible;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 4rem;
+            animation: popHeart 2s ease-out forwards;
+            will-change: transform, opacity;
+        }
+
+        @keyframes popHeart {
+            0% {
+                opacity: 1;
+                transform: scale(0) translateY(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1) translateY(-30px);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.8) translateY(-80px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>May suprise sa likod ng mountain</h1>
+        <div class="message" id="message">
+            <div class="image-container">
+                <img src="https://thumbnails.cbsig.net/CBS_Production_Entertainment_VMS/2021/10/30/1969403459670/PPNIK_DORATHEEXPLORER_403_970029_1920x1080.jpg" alt="DOCTOR" />
+            </div>
+            <p> Surprise ito sa napakaganda explorer </p>
+        </div>
+
+        <div class="button-row" id="buttonRow">
+            <button class="option-button" id="askButton">SIGE ANO YONG SUPRISE?</button>
+        </div>
+
+        <div id="responseMessage" class="response-message"></div>
+    </div>
+
+    <script>
+        const message = document.getElementById("message");
+        const buttonRow = document.getElementById("buttonRow");
+        const responseMessage = document.getElementById("responseMessage");
+
+        // Create plane overlay
+        let planeOverlay = null;
+
+        function getPlaneOverlay() {
+            if (!planeOverlay || !document.body.contains(planeOverlay)) {
+                planeOverlay = document.createElement('div');
+                planeOverlay.className = 'plane-overlay';
+                document.body.appendChild(planeOverlay);
+            }
+            return planeOverlay;
+        }
+
+        // Create heart container
+        let heartContainer = null;
+
+        function getHeartContainer() {
+            if (!heartContainer || !document.body.contains(heartContainer)) {
+                heartContainer = document.createElement('div');
+                heartContainer.className = 'heart-container';
+                document.body.appendChild(heartContainer);
+            }
+            return heartContainer;
+        }
+
+        function createButton(id, text, extraClass = "") {
+            const button = document.createElement("button");
+            button.className = `option-button ${extraClass}`.trim();
+            button.id = id;
+            button.textContent = text;
+            return button;
+        }
+
+        function moveAway(button) {
+            const maxShift = 200;
+            const x = Math.floor(Math.random() * (maxShift * 2 + 1)) - maxShift;
+            const y = Math.floor(Math.random() * 40) - 20;
+            button.style.transform = `translate(${x}px, ${y}px)`;
+        }
+
+        // Create and fly a plane on demand
+        function flyPlane(options = {}) {
+            const emoji = options.emoji || '✈️';
+            const overlay = getPlaneOverlay();
+            
+            const plane = document.createElement('div');
+            plane.className = 'plane';
+            plane.textContent = emoji;
+
+            // randomize vertical start to make it feel dynamic
+            const topPercent = (options.top !== undefined)
+                ? options.top
+                : 50 - Math.floor(Math.random() * 30);
+            plane.style.top = `${topPercent}vh`;
+
+            // optionally set a custom duration
+            if (options.duration) {
+                plane.style.animationDuration = options.duration + 'ms';
+            }
+
+            overlay.appendChild(plane);
+
+            // Remove plane after animation completes
+            const duration = options.duration || 1400;
+            setTimeout(() => {
+                if (overlay.contains(plane)) plane.remove();
+            }, duration + 200);
+        }
+
+        // Pop hearts on screen
+        function popHeart() {
+            const container = getHeartContainer();
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.textContent = '❤️';
+
+            // Random horizontal position
+            const randomX = Math.random() * (window.innerWidth - 60);
+            const randomY = Math.random() * (window.innerHeight - 60);
+            
+            heart.style.left = randomX + 'px';
+            heart.style.top = randomY + 'px';
+
+            container.appendChild(heart);
+
+            // Remove heart after animation completes
+            setTimeout(() => {
+                if (container.contains(heart)) heart.remove();
+            }, 2100);
+        }
+
+        // Page transition overlay
+        function createPageTransition() {
+            const transition = document.createElement('div');
+            transition.className = 'page-transition';
+            document.body.appendChild(transition);
+            
+            setTimeout(() => {
+                transition.remove();
+            }, 1000);
+        }
+
+        // existing behavior
+        const askButton = document.getElementById("askButton");
+        askButton.addEventListener("click", () => {
+            flyPlane();
+            popHeart();
+            createPageTransition();
+
+            setTimeout(() => {
+                message.innerHTML = `
+                    <div class="image-container">
+                        <img src="https://i.pinimg.com/originals/be/19/d3/be19d3effe0c8745e202c47e89f5db5f.png" alt="Happy na" />
+                    </div>
+                    <p><strong> Are you willing to spend a day with me on a date? 🌅</strong></p>
+                    <p><strong> Tanong ng partner in crime mo </strong></p>
+                `;
+
+                buttonRow.innerHTML = "";
+                responseMessage.textContent = "";
+
+                const yesButton = createButton("yesButton", "Yes 🧡");
+                const noButton = createButton("noButton", "No (di pwede huhuhu)", "no-button");
+
+                yesButton.addEventListener("click", () => {
+                    flyPlane({ emoji: '💌', top: 45, duration: 1200 });
+                    popHeart();
+                    createPageTransition();
+
+                    setTimeout(() => {
+                        message.innerHTML = `
+                            <div class="image-container">
+                                <img src="TRY.jpg" alt="Happy na" />
+                            </div>
+                            <p><strong>Happy na ako HAHAHAHA!!!</strong></p>
+                            <p><strong>Set nalang tayo ng araw HAHAHAHA! 💕</strong></p>
+                        `;
+                        responseMessage.textContent = "I can't wait to spend time with you😊!!1";
+                        buttonRow.innerHTML = "";
+                    }, 500);
+                });
+
+                noButton.addEventListener("mouseenter", () => {
+                    moveAway(noButton);
+                    flyPlane({ emoji: '🛩️', top: 40, duration: 1000 });
+                });
+                noButton.addEventListener("focus", () => moveAway(noButton));
+                noButton.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    moveAway(noButton);
+                    flyPlane({ emoji: '😅', top: 50, duration: 1000 });
+                    popHeart();
+                });
+
+                buttonRow.appendChild(yesButton);
+                buttonRow.appendChild(noButton);
+            }, 500);
+        });
+
+        // Button click delegation
+        buttonRow.addEventListener('click', (e) => {
+            if (e.target && e.target.classList && e.target.classList.contains('option-button')) {
+                flyPlane({ emoji: '✈️' });
+                popHeart();
+            }
+        });
+    </script>
+</body>
+</html>
