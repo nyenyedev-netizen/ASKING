@@ -196,6 +196,40 @@
                 transform: rotate(20deg) scale(0.95);
             }
         }
+
+        /* Heart pop-up styles */
+        .heart-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 500;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: fixed;
+            font-size: 4rem;
+            animation: popHeart 2s ease-out forwards;
+            will-change: transform, opacity;
+        }
+
+        @keyframes popHeart {
+            0% {
+                opacity: 1;
+                transform: scale(0) translateY(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1) translateY(-30px);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.8) translateY(-80px);
+            }
+        }
     </style>
 </head>
 <body>
@@ -230,6 +264,18 @@
                 document.body.appendChild(planeOverlay);
             }
             return planeOverlay;
+        }
+
+        // Create heart container
+        let heartContainer = null;
+
+        function getHeartContainer() {
+            if (!heartContainer || !document.body.contains(heartContainer)) {
+                heartContainer = document.createElement('div');
+                heartContainer.className = 'heart-container';
+                document.body.appendChild(heartContainer);
+            }
+            return heartContainer;
         }
 
         function createButton(id, text, extraClass = "") {
@@ -276,6 +322,26 @@
             }, duration + 200);
         }
 
+        // Pop hearts on screen
+        function popHeart() {
+            const container = getHeartContainer();
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.textContent = '❤️';
+
+            // Random horizontal position
+            const randomX = Math.random() * (window.innerWidth - 60);
+            heart.style.left = randomX + 'px';
+            heart.style.top = (window.innerHeight / 2) + 'px';
+
+            container.appendChild(heart);
+
+            // Remove heart after animation completes
+            setTimeout(() => {
+                if (container.contains(heart)) heart.remove();
+            }, 2000);
+        }
+
         // Page transition overlay
         function createPageTransition() {
             const transition = document.createElement('div');
@@ -291,6 +357,7 @@
         const askButton = document.getElementById("askButton");
         askButton.addEventListener("click", () => {
             flyPlane();
+            popHeart();
             createPageTransition();
 
             setTimeout(() => {
@@ -310,6 +377,7 @@
 
                 yesButton.addEventListener("click", () => {
                     flyPlane({ emoji: '💌', top: 45, duration: 1200 });
+                    popHeart();
                     createPageTransition();
 
                     setTimeout(() => {
@@ -345,6 +413,7 @@
         buttonRow.addEventListener('click', (e) => {
             if (e.target && e.target.classList && e.target.classList.contains('option-button')) {
                 flyPlane({ emoji: '✈️' });
+                popHeart();
             }
         });
     </script>
